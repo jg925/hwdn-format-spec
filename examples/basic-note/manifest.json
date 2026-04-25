@@ -1,0 +1,25 @@
+{
+  "format": "hwdn",
+  "formatVersion": "0.1.0",
+  "id": "note-example-001",
+  "fileName": "meeting-notes.hwdn",
+  "createdAt": "2026-04-25T17:00:00Z",
+  "modifiedAt": "2026-04-25T17:05:00Z",
+  "createdBy": {
+    "name": "HWDN Example Writer",
+    "version": "0.1.0"
+  },
+  "payload": "note.json",
+  "features": [
+    {
+      "name": "page-strokes",
+      "required": true,
+      "version": "0.1.0"
+    },
+    {
+      "name": "page-ocr",
+      "required": false,
+      "version": "0.1.0"
+    }
+  ]
+}
