@@ -67,6 +67,22 @@ Recommended fields:
 - `thumbnail`: path to a package thumbnail.
 - `features`: feature flags required or used by the payload.
 
+`createdBy` MAY include:
+
+- `name`: application or service name.
+- `version`: application or service version.
+- `url`: application or service URL.
+
+Each `features` entry SHOULD include:
+
+- `name`: feature identifier.
+- `required`: whether readers must support the feature to correctly open the package.
+- `version`: optional version of the feature.
+
+Version `0.1.0` defines the following feature identifier:
+
+- `canvas-strokes`: the package contains drawable single-canvas stroke data.
+
 See [manifest.schema.json](../schemas/manifest.schema.json) for the draft validation schema.
 
 ## 6. Note Document
@@ -91,6 +107,11 @@ Top-level fields:
 - `authors`
 - `sourceApplication`
 
+`sourceApplication` MAY include:
+
+- `name`: application or service name.
+- `version`: application or service version.
+
 ### 6.2 Canvas
 
 The canvas has:
@@ -109,6 +130,10 @@ A stroke captures one continuous pen-down to pen-up gesture. Each stroke MUST in
 - `tool`
 - `brush`
 - `points`
+
+Each stroke MAY include:
+
+- `startedAt`: ISO 8601 timestamp for the beginning of the stroke. Point `t` values are offsets from this timestamp when it is present.
 
 `tool` MUST be one of:
 
@@ -143,6 +168,8 @@ Each point MAY include:
 - `altitude`
 
 For version `0.1.0`, a reader MUST support drawing `pen` strokes as a continuous path through the point sequence using round caps and round joins. If `pressureCurve` is `linear`, the rendered width at a point is `brush.baseWidth * pressure`, clamped to at least 10% of `brush.baseWidth`. If `pressure` is absent or `pressureCurve` is `none`, the rendered width is `brush.baseWidth`.
+
+Version `0.1.0` represents eraser input as ordered `eraser` strokes, not as edits that split, delete, or mutate earlier stroke records. An `eraser` stroke uses the same point sequence and brush width model as other strokes. Readers that support eraser rendering SHOULD apply eraser strokes in array order as stroke-shaped removal or coverage of earlier visible marks. Writers MAY encode simple solid-background erasing as an `eraser` stroke whose brush color matches the background.
 
 Writers SHOULD store raw captured points. They MAY also store smoothed points only if those are the points the app intends readers to render.
 
