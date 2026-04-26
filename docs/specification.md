@@ -2,16 +2,16 @@
 
 Status: Draft
 
-Version: 0.1.0
+Version: 0.2.0
 
 ## 1. Overview
 
-HWDN defines a package format for handwritten digital notes. Version `0.1.0` is intentionally scoped to one file containing one writable canvas. A conforming reader should be able to reproduce the visible handwritten canvas from stored stroke data and expose OCR detections associated with that canvas.
+HWDN defines a package format for handwritten digital notes. Version `0.2.0` is intentionally scoped to one file containing one writable canvas. A conforming reader should be able to reproduce the visible handwritten canvas from stored stroke data and expose a structured text interpretation of the handwritten contents.
 
 The format separates package metadata from note content:
 
 - `manifest.json` identifies the package, format version, creator, timestamps, and payload paths.
-- `note.json` stores one canvas, strokes, OCR results, and document metadata.
+- `note.json` stores one canvas, strokes, structured interpretation, and document metadata.
 - `assets/` stores optional binary resources referenced from JSON payloads.
 
 ## 2. Package Structure
@@ -26,18 +26,18 @@ assets/
 
 `manifest.json` and `note.json` MUST be UTF-8 encoded JSON files. Unknown files MAY be present for forward compatibility. Readers SHOULD ignore unknown files unless a required feature declares them necessary.
 
-## 3. Version 0.1 Scope
+## 3. Version 0.2 Scope
 
-Version `0.1.0` supports:
+Version `0.2.0` supports:
 
 - One `.hwdn` package.
 - One `note.json` payload.
 - One `canvas` in that payload.
 - An ordered list of handwritten strokes.
-- Optional OCR detections for recognized text such as `hello world`.
+- Optional structured interpretation for handwritten contents such as `hello world`.
 - Standard metadata for the file and note.
 
-Version `0.1.0` does not define multiple pages, layers, version history, collaboration, streaming ink, encryption, imported PDF mapping, or partial-stroke erasing.
+Version `0.2.0` does not define multiple pages, layers, version history, collaboration, streaming ink, encryption, imported PDF mapping, or partial-stroke erasing.
 
 ## 4. Coordinate System
 
@@ -79,9 +79,10 @@ Each `features` entry SHOULD include:
 - `required`: whether readers must support the feature to correctly open the package.
 - `version`: optional version of the feature.
 
-Version `0.1.0` defines the following feature identifier:
+Version `0.2.0` defines the following feature identifiers:
 
 - `canvas-strokes`: the package contains drawable single-canvas stroke data.
+- `structured-interpretation`: the package contains a text-based interpretation of the handwritten contents.
 
 See [manifest.schema.json](../schemas/manifest.schema.json) for the draft validation schema.
 
@@ -92,7 +93,7 @@ The note document contains the handwritten single-canvas model.
 Top-level fields:
 
 - `document`: document-level metadata and defaults.
-- `canvas`: the writable area, strokes, and OCR detections.
+- `canvas`: the writable area, strokes, and structured interpretation.
 
 ### 6.1 Document Metadata
 
@@ -120,7 +121,7 @@ The canvas has:
 - `size`: canvas width and height.
 - `background`: optional canvas color, ruled paper description, or asset reference.
 - `strokes`: ordered stroke list.
-- `ocr`: optional OCR detections for the canvas.
+- `interpretation`: optional structured interpretation for the canvas contents.
 
 ### 6.3 Strokes
 
@@ -151,7 +152,7 @@ Each stroke MAY include:
 `brush` MAY include:
 
 - `opacity`: normalized opacity from `0` to `1`.
-- `pressureCurve`: pressure-to-width curve. Version `0.1.0` defines `none` and `linear`.
+- `pressureCurve`: pressure-to-width curve. Version `0.2.0` defines `none` and `linear`.
 
 Each point MUST include:
 
@@ -167,17 +168,39 @@ Each point MAY include:
 - `azimuth`
 - `altitude`
 
-For version `0.1.0`, a reader MUST support drawing `pen` strokes as a continuous path through the point sequence using round caps and round joins. If `pressureCurve` is `linear`, the rendered width at a point is `brush.baseWidth * pressure`, clamped to at least 10% of `brush.baseWidth`. If `pressure` is absent or `pressureCurve` is `none`, the rendered width is `brush.baseWidth`.
+For version `0.2.0`, a reader MUST support drawing `pen` strokes as a continuous path through the point sequence using round caps and round joins. If `pressureCurve` is `linear`, the rendered width at a point is `brush.baseWidth * pressure`, clamped to at least 10% of `brush.baseWidth`. If `pressure` is absent or `pressureCurve` is `none`, the rendered width is `brush.baseWidth`.
 
-Version `0.1.0` represents eraser input as ordered `eraser` strokes, not as edits that split, delete, or mutate earlier stroke records. An `eraser` stroke uses the same point sequence and brush width model as other strokes. Readers that support eraser rendering SHOULD apply eraser strokes in array order as stroke-shaped removal or coverage of earlier visible marks. Writers MAY encode simple solid-background erasing as an `eraser` stroke whose brush color matches the background.
+Version `0.2.0` represents eraser input as ordered `eraser` strokes, not as edits that split, delete, or mutate earlier stroke records. An `eraser` stroke uses the same point sequence and brush width model as other strokes. Readers that support eraser rendering SHOULD apply eraser strokes in array order as stroke-shaped removal or coverage of earlier visible marks. Writers MAY encode simple solid-background erasing as an `eraser` stroke whose brush color matches the background.
 
 Writers SHOULD store raw captured points. They MAY also store smoothed points only if those are the points the app intends readers to render.
 
-### 6.4 OCR
+### 6.4 Interpretation
 
-OCR results are canvas-local detections. OCR entries MAY be organized at multiple levels such as block, line, word, or character.
+The interpretation is the canvas-local, text-based reading of the handwritten contents. It lets search indexes, accessibility tools, LLMs, and other services consume a `.hwdn` file without deriving text from raw stroke points.
 
-Each OCR detection SHOULD include:
+The interpretation is descriptive metadata, not the rendering source of truth. Renderers reproduce the visible canvas from `strokes`; services that need the readable contents SHOULD use `interpretation`.
+
+If present, `interpretation` MUST include:
+
+- `plainText`: the best plain-text reading of the canvas, in reading order.
+
+`interpretation` MAY include:
+
+- `markdown`: a Markdown representation when useful for headings, lists, tables, tasks, or other lightweight structure.
+- `language`: BCP 47 language tag for the primary interpreted language when known.
+- `confidence`: normalized confidence from `0` to `1`.
+- `generatedAt`: ISO 8601 timestamp for when the interpretation was produced.
+- `source`: description of how the interpretation was produced.
+- `blocks`: structured content blocks in reading order.
+
+`source` MAY include:
+
+- `type`: one of `human`, `handwriting-recognition`, `llm`, `import`, `app`, or `unknown`.
+- `name`: application, service, model, or person label.
+- `version`: source version when applicable.
+- `model`: model identifier when applicable.
+
+Each content block SHOULD include:
 
 - `id`
 - `type`
@@ -185,12 +208,15 @@ Each OCR detection SHOULD include:
 - `confidence`
 - `bounds`
 - `strokeRefs`
+- `children`
 
-`strokeRefs` links recognized text back to the source stroke IDs when known.
+Block `type` values are semantic or layout labels such as `paragraph`, `heading`, `line`, `list`, `listItem`, `table`, `tableRow`, `tableCell`, `checkbox`, `equation`, `code`, `drawing`, `word`, `character`, or `unknown`.
+
+The `blocks` array order is the reading order. Nested `children` MAY represent finer-grained structure, such as a paragraph containing lines or words. `strokeRefs` links interpreted text back to the source stroke IDs when known. `bounds` describes the canvas-local region associated with the block when known.
 
 ## 7. Hello World Example
 
-The example package in [examples/basic-note](../examples/basic-note) stores `hello world` as two handwritten strokes and one OCR line. The structure is:
+The example package in [examples/basic-note](../examples/basic-note) stores `hello world` as two handwritten strokes and one interpreted paragraph. The structure is:
 
 ```json
 {
@@ -235,21 +261,36 @@ The example package in [examples/basic-note](../examples/basic-note) stores `hel
         ]
       }
     ],
-    "ocr": [
-      {
-        "id": "ocr-line-001",
-        "type": "line",
-        "text": "hello world",
-        "confidence": 0.92,
-        "bounds": {
-          "x": 120,
-          "y": 180,
-          "width": 420,
-          "height": 90
-        },
-        "strokeRefs": []
-      }
-    ]
+    "interpretation": {
+      "plainText": "hello world",
+      "markdown": "hello world",
+      "language": "en",
+      "confidence": 0.92,
+      "generatedAt": "2026-04-25T17:05:00Z",
+      "source": {
+        "type": "handwriting-recognition",
+        "name": "HWDN Example Writer",
+        "version": "0.2.0"
+      },
+      "blocks": [
+        {
+          "id": "interp-paragraph-001",
+          "type": "paragraph",
+          "text": "hello world",
+          "confidence": 0.92,
+          "bounds": {
+            "x": 110,
+            "y": 200,
+            "width": 700,
+            "height": 90
+          },
+          "strokeRefs": [
+            "stroke-hello-001",
+            "stroke-world-001"
+          ]
+        }
+      ]
+    }
   }
 }
 ```

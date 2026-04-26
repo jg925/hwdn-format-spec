@@ -1,25 +1,25 @@
 {
   "format": "hwdn",
-  "formatVersion": "0.1.0",
+  "formatVersion": "0.2.0",
   "id": "note-hello-world-001",
   "fileName": "hello-world.hwdn",
   "createdAt": "2026-04-25T17:00:00Z",
   "modifiedAt": "2026-04-25T17:05:00Z",
   "createdBy": {
     "name": "HWDN Example Writer",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "payload": "note.json",
   "features": [
     {
       "name": "canvas-strokes",
       "required": true,
-      "version": "0.1.0"
+      "version": "0.2.0"
     },
     {
-      "name": "canvas-ocr",
+      "name": "structured-interpretation",
       "required": false,
-      "version": "0.1.0"
+      "version": "0.2.0"
     }
   ]
 }

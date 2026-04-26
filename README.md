@@ -1,12 +1,12 @@
 # HWDN Format Specification
 
-> **Open standard · Apache 2.0 · Anyone may implement**
+> **Open standard · MIT License · Anyone may implement**
 
-HWDN is an open file format for handwritten digital notes. Version `0.1.0` is
+HWDN is an open file format for handwritten digital notes. Version `0.2.0` is
 scoped to one file containing one writable canvas. It is designed to preserve
-the information needed to reproduce ink on that canvas, attach OCR results to
-the written content, and carry standard document metadata such as file name and
-creation date.
+the information needed to reproduce ink on that canvas, attach a structured
+text interpretation of the handwritten contents, and carry standard document
+metadata such as file name and creation date.
 
 Anyone may build a reader, writer, importer, exporter, or converter for `.hwdn`
 files — in any language, in any product, commercial or otherwise — without fee,
@@ -22,11 +22,11 @@ rules and [IMPLEMENTATIONS.md](IMPLEMENTATIONS.md) to register your project.
 | [`docs/specification.md`](docs/specification.md) | Human-readable format specification draft |
 | [`docs/versioning.md`](docs/versioning.md) | Versioning and compatibility policy |
 | [`schemas/manifest.schema.json`](schemas/manifest.schema.json) | JSON Schema for package metadata |
-| [`schemas/note.schema.json`](schemas/note.schema.json) | JSON Schema for one canvas, strokes, and OCR |
+| [`schemas/note.schema.json`](schemas/note.schema.json) | JSON Schema for one canvas, strokes, and text interpretation |
 | [`examples/basic-note/`](examples/basic-note/) | Unpacked canonical `.hwdn` example |
 | [`IMPLEMENTING.md`](IMPLEMENTING.md) | Conformance rules for readers and writers |
 | [`IMPLEMENTATIONS.md`](IMPLEMENTATIONS.md) | Registry of known implementations |
-| [`LICENSE`](LICENSE) | Apache License 2.0 |
+| [`LICENSE`](LICENSE) | MIT License |
 
 ---
 
@@ -35,25 +35,27 @@ rules and [IMPLEMENTATIONS.md](IMPLEMENTATIONS.md) to register your project.
 A `.hwdn` file is a ZIP archive containing:
 
 ```text
-manifest.json   ← package identity, version, metadata
-note.json       ← canvas geometry, ink strokes, OCR layers
-assets/         ← reserved for backgrounds, thumbnails, attachments
+manifest.json   <- package identity, version, metadata
+note.json       <- canvas geometry, ink strokes, text interpretation
+assets/         <- reserved for backgrounds, thumbnails, attachments
 ```
 
 `manifest.json` describes the file-level package metadata and points to the note
 payload. `note.json` stores one canvas, stroke geometry, drawing attributes, and
-OCR detections. The `assets/` directory is reserved for embedded backgrounds,
-thumbnails, or attachments.
+a structured interpretation that other services can read without processing the
+ink points directly. The `assets/` directory is reserved for embedded
+backgrounds, thumbnails, or attachments.
 
 ---
 
 ## Design goals
 
 - Reproduce a handwritten canvas faithfully from stored stroke data.
-- Preserve OCR text and positional confidence without requiring OCR to be rerun.
+- Preserve readable text, structure, positional context, and source-stroke links
+  without requiring handwriting recognition to be rerun.
 - Keep metadata explicit: file name, creation date, modification date, author,
   app identity, and format version.
-- Keep the first version small enough for a custom note app to write and load a
+- Keep the baseline format small enough for a custom note app to write and load a
   single handwritten canvas.
 - Keep the baseline format easy to parse with common ZIP and JSON tooling.
 - Be extensible: unknown keys are ignored, vendor extensions use the `x-` prefix.
@@ -73,7 +75,7 @@ thumbnails, or attachments.
 
 ## Current status
 
-This is an early draft (v0.1.0), not a finalized standard. Field names, required
+This is an early draft (v0.2.0), not a finalized standard. Field names, required
 properties, validation rules, and packaging details may change before v1.0.0.
 Breaking changes will be tracked in [`docs/versioning.md`](docs/versioning.md).
 

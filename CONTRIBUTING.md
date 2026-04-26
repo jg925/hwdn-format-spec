@@ -15,6 +15,6 @@ This repository is currently a specification scaffold. Contributions should focu
 
 - Prefer explicit field names over compact encodings in the baseline format.
 - Keep unknown fields forward-compatible where possible.
-- Tie OCR results back to canvas coordinates and source strokes when available.
+- Tie interpreted text back to canvas coordinates and source strokes when available.
 - Preserve enough stroke data to redraw notes without relying on raster images.
 - Document whether each new field is required, optional, or recommended.
