@@ -1,37 +1,86 @@
 # HWDN Format Specification
 
-HWDN is a proposed file format for handwritten digital notes. Version `0.1.0` is scoped to one file containing one writable canvas. It is designed to preserve the information needed to reproduce ink on that canvas, attach OCR results to the written content, and carry standard document metadata such as file name and creation date.
+> **Open standard · Apache 2.0 · Anyone may implement**
 
-This repository contains the scaffolding for defining the `.hwdn` format. The initial draft treats an HWDN file as a ZIP package with JSON documents inside it, which keeps the format portable, inspectable, and easy to validate.
+HWDN is an open file format for handwritten digital notes. Version `0.1.0` is
+scoped to one file containing one writable canvas. It is designed to preserve
+the information needed to reproduce ink on that canvas, attach OCR results to
+the written content, and carry standard document metadata such as file name and
+creation date.
 
-## Repository Layout
+Anyone may build a reader, writer, importer, exporter, or converter for `.hwdn`
+files — in any language, in any product, commercial or otherwise — without fee,
+royalty, or permission. See [IMPLEMENTING.md](IMPLEMENTING.md) for conformance
+rules and [IMPLEMENTATIONS.md](IMPLEMENTATIONS.md) to register your project.
 
-- [docs/specification.md](docs/specification.md): human-readable format specification draft.
-- [docs/versioning.md](docs/versioning.md): versioning and compatibility policy.
-- [schemas/manifest.schema.json](schemas/manifest.schema.json): JSON Schema for package metadata.
-- [schemas/note.schema.json](schemas/note.schema.json): JSON Schema for one canvas, strokes, and OCR.
-- [examples/basic-note](examples/basic-note): unpacked example `.hwdn` package contents.
+---
 
-## Format Snapshot
+## Repository layout
+
+| Path | Purpose |
+|------|---------|
+| [`docs/specification.md`](docs/specification.md) | Human-readable format specification draft |
+| [`docs/versioning.md`](docs/versioning.md) | Versioning and compatibility policy |
+| [`schemas/manifest.schema.json`](schemas/manifest.schema.json) | JSON Schema for package metadata |
+| [`schemas/note.schema.json`](schemas/note.schema.json) | JSON Schema for one canvas, strokes, and OCR |
+| [`examples/basic-note/`](examples/basic-note/) | Unpacked canonical `.hwdn` example |
+| [`IMPLEMENTING.md`](IMPLEMENTING.md) | Conformance rules for readers and writers |
+| [`IMPLEMENTATIONS.md`](IMPLEMENTATIONS.md) | Registry of known implementations |
+| [`LICENSE`](LICENSE) | Apache License 2.0 |
+
+---
+
+## Format snapshot
 
 A `.hwdn` file is a ZIP archive containing:
 
 ```text
-manifest.json
-note.json
-assets/
+manifest.json   ← package identity, version, metadata
+note.json       ← canvas geometry, ink strokes, OCR layers
+assets/         ← reserved for backgrounds, thumbnails, attachments
 ```
 
-`manifest.json` describes the file-level package metadata and points to the note payload. `note.json` stores one canvas, stroke geometry, drawing attributes, and OCR detections. The `assets/` directory is reserved for embedded backgrounds, thumbnails, or attachments.
+`manifest.json` describes the file-level package metadata and points to the note
+payload. `note.json` stores one canvas, stroke geometry, drawing attributes, and
+OCR detections. The `assets/` directory is reserved for embedded backgrounds,
+thumbnails, or attachments.
 
-## Design Goals
+---
+
+## Design goals
 
 - Reproduce a handwritten canvas faithfully from stored stroke data.
 - Preserve OCR text and positional confidence without requiring OCR to be rerun.
-- Keep metadata explicit, including file name, creation date, modification date, author, app identity, and format version.
-- Keep the first version small enough for a custom note app to write and load a single handwritten canvas.
+- Keep metadata explicit: file name, creation date, modification date, author,
+  app identity, and format version.
+- Keep the first version small enough for a custom note app to write and load a
+  single handwritten canvas.
 - Keep the baseline format easy to parse with common ZIP and JSON tooling.
+- Be extensible: unknown keys are ignored, vendor extensions use the `x-` prefix.
 
-## Current Status
+---
 
-This is an early scaffold, not a finalized standard. Field names, required properties, validation rules, and packaging details should be reviewed before being treated as stable.
+## Quick start for implementors
+
+1. Read [`docs/specification.md`](docs/specification.md) for the full field
+   reference.
+2. Validate against the schemas in [`schemas/`](schemas/).
+3. Compare your output against the canonical examples in
+   [`examples/basic-note/`](examples/basic-note/).
+4. Add your project to [`IMPLEMENTATIONS.md`](IMPLEMENTATIONS.md).
+
+---
+
+## Current status
+
+This is an early draft (v0.1.0), not a finalized standard. Field names, required
+properties, validation rules, and packaging details may change before v1.0.0.
+Breaking changes will be tracked in [`docs/versioning.md`](docs/versioning.md).
+
+---
+
+## Contributing
+
+Issues and pull requests are welcome. If you are proposing a new field or
+behavior change, please open an issue first so the rationale can be discussed
+before implementation.
