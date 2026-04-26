@@ -1,6 +1,6 @@
 # Basic HWDN Example
 
-This directory shows the unpacked contents of a minimal `.hwdn` package.
+This directory shows the unpacked contents of a minimal single-canvas `.hwdn` package containing handwritten strokes and OCR for `hello world`.
 
 To create an example archive manually:
 

@@ -1,13 +1,13 @@
 {
   "document": {
-    "id": "doc-example-001",
-    "title": "Meeting Notes",
+    "id": "doc-hello-world-001",
+    "title": "Hello World",
     "createdAt": "2026-04-25T17:00:00Z",
     "modifiedAt": "2026-04-25T17:05:00Z",
     "units": "px",
-    "defaultPageSize": {
+    "canvasSize": {
       "width": 1200,
-      "height": 1600
+      "height": 800
     },
     "authors": [
       {
@@ -20,113 +20,210 @@
       "version": "0.1.0"
     }
   },
-  "pages": [
-    {
-      "id": "page-001",
-      "index": 0,
-      "size": {
-        "width": 1200,
-        "height": 1600
-      },
-      "background": {
-        "color": "#ffffff",
-        "style": "ruled"
-      },
-      "strokes": [
-        {
-          "id": "stroke-001",
-          "tool": "pen",
+  "canvas": {
+    "id": "canvas-001",
+    "size": {
+      "width": 1200,
+      "height": 800
+    },
+    "background": {
+      "color": "#ffffff",
+      "style": "blank"
+    },
+    "strokes": [
+      {
+        "id": "stroke-hello-001",
+        "tool": "pen",
+        "brush": {
           "color": "#111111",
-          "width": 4,
+          "baseWidth": 5,
           "opacity": 1,
-          "smoothing": "catmull-rom",
-          "interpolation": "bezier",
-          "startedAt": "2026-04-25T17:01:12Z",
-          "points": [
-            {
-              "x": 180,
-              "y": 240,
-              "t": 0,
-              "pressure": 0.36
-            },
-            {
-              "x": 220,
-              "y": 245,
-              "t": 24,
-              "pressure": 0.52
-            },
-            {
-              "x": 264,
-              "y": 238,
-              "t": 48,
-              "pressure": 0.49
-            }
-          ]
+          "pressureCurve": "linear"
         },
-        {
-          "id": "stroke-002",
-          "tool": "pen",
-          "color": "#111111",
-          "width": 4,
-          "opacity": 1,
-          "smoothing": "catmull-rom",
-          "interpolation": "bezier",
-          "startedAt": "2026-04-25T17:01:14Z",
-          "points": [
-            {
-              "x": 310,
-              "y": 238,
-              "t": 0,
-              "pressure": 0.42
-            },
-            {
-              "x": 345,
-              "y": 240,
-              "t": 20,
-              "pressure": 0.55
-            },
-            {
-              "x": 382,
-              "y": 242,
-              "t": 44,
-              "pressure": 0.5
-            }
-          ]
-        }
-      ],
-      "ocr": [
-        {
-          "id": "ocr-line-001",
-          "type": "line",
-          "text": "hello",
-          "confidence": 0.91,
-          "language": "en",
-          "bounds": {
-            "x": 176,
-            "y": 220,
-            "width": 220,
-            "height": 52
+        "input": {
+          "source": "stylus",
+          "device": "s-pen",
+          "sampleRateHz": 120
+        },
+        "startedAt": "2026-04-25T17:01:12Z",
+        "points": [
+          {
+            "x": 120,
+            "y": 260,
+            "t": 0,
+            "pressure": 0.42
           },
-          "strokeRefs": [
-            "stroke-001",
-            "stroke-002"
-          ]
-        }
-      ]
-    }
-  ],
-  "history": [
-    {
-      "version": "1",
-      "createdAt": "2026-04-25T17:00:00Z",
-      "author": {
-        "id": "author-001",
-        "name": "Example Author"
+          {
+            "x": 136,
+            "y": 220,
+            "t": 20,
+            "pressure": 0.6
+          },
+          {
+            "x": 152,
+            "y": 260,
+            "t": 40,
+            "pressure": 0.58
+          },
+          {
+            "x": 176,
+            "y": 238,
+            "t": 60,
+            "pressure": 0.51
+          },
+          {
+            "x": 204,
+            "y": 262,
+            "t": 82,
+            "pressure": 0.5
+          },
+          {
+            "x": 232,
+            "y": 220,
+            "t": 104,
+            "pressure": 0.56
+          },
+          {
+            "x": 258,
+            "y": 262,
+            "t": 126,
+            "pressure": 0.53
+          },
+          {
+            "x": 290,
+            "y": 220,
+            "t": 148,
+            "pressure": 0.57
+          },
+          {
+            "x": 318,
+            "y": 262,
+            "t": 170,
+            "pressure": 0.54
+          },
+          {
+            "x": 356,
+            "y": 238,
+            "t": 194,
+            "pressure": 0.59
+          },
+          {
+            "x": 390,
+            "y": 260,
+            "t": 218,
+            "pressure": 0.48
+          }
+        ]
       },
-      "summary": "Created note.",
-      "changeSet": {
-        "operation": "create-document"
+      {
+        "id": "stroke-world-001",
+        "tool": "pen",
+        "brush": {
+          "color": "#111111",
+          "baseWidth": 5,
+          "opacity": 1,
+          "pressureCurve": "linear"
+        },
+        "input": {
+          "source": "stylus",
+          "device": "s-pen",
+          "sampleRateHz": 120
+        },
+        "startedAt": "2026-04-25T17:01:15Z",
+        "points": [
+          {
+            "x": 470,
+            "y": 238,
+            "t": 0,
+            "pressure": 0.45
+          },
+          {
+            "x": 486,
+            "y": 264,
+            "t": 22,
+            "pressure": 0.57
+          },
+          {
+            "x": 506,
+            "y": 240,
+            "t": 44,
+            "pressure": 0.5
+          },
+          {
+            "x": 526,
+            "y": 264,
+            "t": 66,
+            "pressure": 0.56
+          },
+          {
+            "x": 550,
+            "y": 236,
+            "t": 88,
+            "pressure": 0.52
+          },
+          {
+            "x": 586,
+            "y": 260,
+            "t": 112,
+            "pressure": 0.54
+          },
+          {
+            "x": 620,
+            "y": 236,
+            "t": 136,
+            "pressure": 0.59
+          },
+          {
+            "x": 652,
+            "y": 260,
+            "t": 160,
+            "pressure": 0.51
+          },
+          {
+            "x": 684,
+            "y": 220,
+            "t": 184,
+            "pressure": 0.55
+          },
+          {
+            "x": 712,
+            "y": 262,
+            "t": 208,
+            "pressure": 0.58
+          },
+          {
+            "x": 748,
+            "y": 236,
+            "t": 232,
+            "pressure": 0.6
+          },
+          {
+            "x": 784,
+            "y": 260,
+            "t": 256,
+            "pressure": 0.48
+          }
+        ]
       }
-    }
-  ]
+    ],
+    "ocr": [
+      {
+        "id": "ocr-line-001",
+        "type": "line",
+        "text": "hello world",
+        "confidence": 0.92,
+        "language": "en",
+        "bounds": {
+          "x": 110,
+          "y": 200,
+          "width": 700,
+          "height": 90
+        },
+        "strokeRefs": [
+          "stroke-hello-001",
+          "stroke-world-001"
+        ]
+      }
+    ]
+  }
 }
