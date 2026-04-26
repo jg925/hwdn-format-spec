@@ -1,27 +1,19 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://hwdn.dev/schemas/note.schema.json",
-  "title": "HWDN Note",
+  "title": "HWDN Single-Canvas Note",
   "type": "object",
   "additionalProperties": true,
-  "required": ["document", "pages"],
+  "required": ["document", "canvas"],
   "properties": {
     "document": {
       "$ref": "#/$defs/document"
     },
-    "pages": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "$ref": "#/$defs/page"
-      }
+    "canvas": {
+      "$ref": "#/$defs/canvas"
     },
-    "history": {
-      "type": "array",
-      "items": {
-        "$ref": "#/$defs/historyEntry"
-      }
-    }
+    "pages": false,
+    "history": false
   },
   "$defs": {
     "document": {
@@ -33,7 +25,7 @@
         "createdAt",
         "modifiedAt",
         "units",
-        "defaultPageSize"
+        "canvasSize"
       ],
       "properties": {
         "id": {
@@ -55,7 +47,7 @@
           "type": "string",
           "enum": ["px", "pt", "mm"]
         },
-        "defaultPageSize": {
+        "canvasSize": {
           "$ref": "#/$defs/size"
         },
         "authors": {
@@ -94,18 +86,14 @@
         }
       }
     },
-    "page": {
+    "canvas": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["id", "index", "size", "strokes"],
+      "required": ["id", "size", "strokes"],
       "properties": {
         "id": {
           "type": "string",
           "minLength": 1
-        },
-        "index": {
-          "type": "integer",
-          "minimum": 0
         },
         "size": {
           "$ref": "#/$defs/size"
@@ -147,7 +135,8 @@
       "additionalProperties": true,
       "properties": {
         "color": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
         },
         "style": {
           "type": "string",
@@ -161,7 +150,7 @@
     "stroke": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["id", "tool", "color", "width", "points"],
+      "required": ["id", "tool", "brush", "points"],
       "properties": {
         "id": {
           "type": "string",
@@ -171,28 +160,11 @@
           "type": "string",
           "enum": ["pen", "pencil", "marker", "highlighter", "eraser"]
         },
-        "color": {
-          "type": "string"
+        "brush": {
+          "$ref": "#/$defs/brush"
         },
-        "width": {
-          "type": "number",
-          "exclusiveMinimum": 0
-        },
-        "opacity": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 1
-        },
-        "blendMode": {
-          "type": "string"
-        },
-        "smoothing": {
-          "type": "string",
-          "enum": ["none", "quadratic", "cubic", "catmull-rom"]
-        },
-        "interpolation": {
-          "type": "string",
-          "enum": ["linear", "bezier"]
+        "input": {
+          "$ref": "#/$defs/input"
         },
         "startedAt": {
           "type": "string",
@@ -207,10 +179,50 @@
         }
       }
     },
+    "brush": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["color", "baseWidth"],
+      "properties": {
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+        },
+        "baseWidth": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "opacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "pressureCurve": {
+          "type": "string",
+          "enum": ["none", "linear"]
+        }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "device": {
+          "type": "string"
+        },
+        "sampleRateHz": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
     "point": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["x", "y"],
+      "required": ["x", "y", "t"],
       "properties": {
         "x": {
           "type": "number"
@@ -238,10 +250,6 @@
         },
         "altitude": {
           "type": "number"
-        },
-        "width": {
-          "type": "number",
-          "exclusiveMinimum": 0
         }
       }
     },
@@ -304,30 +312,6 @@
         "height": {
           "type": "number",
           "exclusiveMinimum": 0
-        }
-      }
-    },
-    "historyEntry": {
-      "type": "object",
-      "additionalProperties": true,
-      "required": ["version", "createdAt", "summary"],
-      "properties": {
-        "version": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "author": {
-          "$ref": "#/$defs/person"
-        },
-        "summary": {
-          "type": "string"
-        },
-        "changeSet": {
-          "type": "object",
-          "additionalProperties": true
         }
       }
     }
