@@ -15,9 +15,8 @@ an implementation.
 
 A conformant reader MUST:
 
-- Detect the `hwdn` magic string at offset 0 of the ZIP central directory comment
-  or in `manifest.json → format.magic`.
-- Reject files whose `format.magic` value is not `"hwdn"`.
+- Open the `.hwdn` package as a ZIP archive.
+- Reject files whose `manifest.json -> format` value is not `"hwdn"`.
 - Parse `manifest.json` and `note.json` according to their published JSON Schemas
   in [`schemas/`](schemas/).
 - Preserve all stroke point coordinates without lossy rounding.
@@ -25,30 +24,31 @@ A conformant reader MUST:
 
 A conformant reader SHOULD:
 
-- Respect the `format.version` field and warn the user when encountering a major
+- Respect the `formatVersion` field and warn the user when encountering a major
   version higher than the one the reader was built against.
-- Surface OCR text from `note.json → ocr_layers` when present.
-- Preserve `manifest.json → metadata` fields when round-tripping through an editor.
+- Surface text from `note.json -> canvas -> interpretation` when present.
+- Preserve manifest and document metadata fields when round-tripping through an editor.
 
 ### Writer (serialiser / exporter)
 
 A conformant writer MUST:
 
-- Produce a valid ZIP archive whose central directory comment begins with `hwdn`.
+- Produce a valid ZIP archive.
 - Include a `manifest.json` that validates against
   [`schemas/manifest.schema.json`](schemas/manifest.schema.json).
 - Include a `note.json` that validates against
   [`schemas/note.schema.json`](schemas/note.schema.json).
-- Write `format.magic` as the exact string `"hwdn"`.
-- Write `format.version` as a semver string (e.g. `"0.1.0"`).
-- Write `format.encoding` as `"utf-8"`.
-- Include at least one canvas entry in `note.json → canvas`.
+- Write `format` as the exact string `"hwdn"`.
+- Write `formatVersion` as a semver string (e.g. `"0.2.0"`).
+- Include one canvas object in `note.json -> canvas`.
 
 A conformant writer SHOULD:
 
-- Write `metadata.created_at` and `metadata.modified_at` as RFC 3339 timestamps.
-- Populate `metadata.app_name` and `metadata.app_version` with the producing
+- Write `createdAt` and `modifiedAt` values as RFC 3339 timestamps.
+- Populate `createdBy` and `document.sourceApplication` with the producing
   application's identity.
+- Write `note.json -> canvas -> interpretation` when readable handwritten text is
+  known or can be produced by the application.
 - Validate output against the published schemas before finalising the file.
 
 ---
@@ -101,6 +101,6 @@ to propose adding it to the core spec.
 
 ## License
 
-This specification is licensed under the
-[Apache License 2.0](LICENSE). You may implement, fork, or build
-commercial products around the `.hwdn` format without restriction.
+This specification is licensed under the [MIT License](LICENSE). You may
+implement, fork, or build commercial products around the `.hwdn` format without
+restriction.

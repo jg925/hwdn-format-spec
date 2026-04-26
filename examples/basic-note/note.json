@@ -17,7 +17,7 @@
     ],
     "sourceApplication": {
       "name": "HWDN Example Writer",
-      "version": "0.1.0"
+      "version": "0.2.0"
     }
   },
   "canvas": {
@@ -206,24 +206,54 @@
         ]
       }
     ],
-    "ocr": [
-      {
-        "id": "ocr-line-001",
-        "type": "line",
-        "text": "hello world",
-        "confidence": 0.92,
-        "language": "en",
-        "bounds": {
-          "x": 110,
-          "y": 200,
-          "width": 700,
-          "height": 90
-        },
-        "strokeRefs": [
-          "stroke-hello-001",
-          "stroke-world-001"
-        ]
-      }
-    ]
+    "interpretation": {
+      "plainText": "hello world",
+      "markdown": "hello world",
+      "language": "en",
+      "confidence": 0.92,
+      "generatedAt": "2026-04-25T17:05:00Z",
+      "source": {
+        "type": "handwriting-recognition",
+        "name": "HWDN Example Writer",
+        "version": "0.2.0"
+      },
+      "blocks": [
+        {
+          "id": "interp-paragraph-001",
+          "type": "paragraph",
+          "text": "hello world",
+          "confidence": 0.92,
+          "language": "en",
+          "bounds": {
+            "x": 110,
+            "y": 200,
+            "width": 700,
+            "height": 90
+          },
+          "strokeRefs": [
+            "stroke-hello-001",
+            "stroke-world-001"
+          ],
+          "children": [
+            {
+              "id": "interp-line-001",
+              "type": "line",
+              "text": "hello world",
+              "confidence": 0.92,
+              "bounds": {
+                "x": 110,
+                "y": 200,
+                "width": 700,
+                "height": 90
+              },
+              "strokeRefs": [
+                "stroke-hello-001",
+                "stroke-world-001"
+              ]
+            }
+          ]
+        }
+      ]
+    }
   }
 }
